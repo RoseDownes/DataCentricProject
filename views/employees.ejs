@@ -1,0 +1,45 @@
+<h3> Employees Page </h3>
+
+
+<table border="1">
+    <tr>
+        <th>EID</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Salary</th>
+        <th>Update</th>
+    </tr>
+
+
+    <tr>
+
+
+    </tr>
+    <% for(let e of employees){%>
+        <tl>
+            </tr>
+            <td>
+                <%=e.eid %>
+            </td>
+            <td>
+                <%=e.ename %>
+            </td>
+            <td>
+                <%=e.role %>
+            </td>
+            <td>
+                <%=e.salary %>
+            </td>
+            <td>
+                <a href="http://localhost:3004/edit/<%=e.eid%>">Update</a>
+            </td>
+            </tr>
+            <% }%>
+
+
+
+</table>
+<br /><br />
+<a href="http://localhost:3004/edit">Edit</a>
+<br /><br />
+<a href="http://localhost:3004/">Home</a>
