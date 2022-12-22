@@ -4,19 +4,19 @@
 <form method="POST">
     <label>EID</label>
     <input type="text" name="eid" required value="<%=edit.eid %>" readonly>
-    <br /><br />
+    <br />
 
     <label>Name</label>
-    <input type="text" name="ename" required value="<%=editemployee.ename %>" minlength="5">
-    <br /><br />
+    <input type="text" name="ename" required value="<%=edit.ename %>" minlength="5">
+    <br />
 
-    <label>Job</label>
-    <input type="city" name="role" required value="<%=editemployee.role %>">
-    <br /><br />
+    <label>Role</label>
+    <input type="city" name="role" required value="<%=edit.role %>">
+    <br />
 
     <label>Salary</label>
-    <input type="text" name="salary" min="1" max="10000" required value="<%=editemployee.salary %>">
-    <br /><br />
+    <input type="text" name="salary" min="1" max="10000" required value="<%=edit.salary %>">
+    <br />
 
     <button type="submit">Submit</button>
 </form>

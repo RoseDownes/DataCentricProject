@@ -7,8 +7,8 @@ pMySQL.createPool({
     password: 'root',
     database: 'proj2022',
     insecureAuth: true
-}).then((p) => {
-    connection = p;
+}).then((data) => {
+    connection = data;
 }).catch((e) => {
     console.log('Pool Error ' + e);
 });
@@ -17,7 +17,6 @@ var getEmployees = function () {
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM employee')
             .then((data) => {
-                //console.log(data);
                 resolve(data);
             })
             .catch((error) => {
@@ -27,7 +26,11 @@ var getEmployees = function () {
 }
 var getUpdate = function (eid) {
     return new Promise((resolve, reject) => {
-        pool.query(`select * from employee where eid like "${eid}";`)
+        var mySqlQuery = {
+            sql: 'select * from employee where eid=?',
+            values: [eid]
+        }
+        connection.query(mySqlQuery)
             .then((data) => {
                 resolve(data)
             })
@@ -44,7 +47,7 @@ var updateEmployee = function (employee) {
             values: [employee.ename, employee.role, employee.salary]
         }
 
-        pool.query(myQuery)
+        connection.query(myQuery)
             .then((data) => {
                 console.log(data)
             })
@@ -67,8 +70,41 @@ var getDepartments = function () {
     })
 }
 
+var deleteDepartment = function (did) {
+    return new Promise((resolve, reject) => {
+        var mySqlQuery = {
+            sql: 'delete from dept where did = ?',
+            values: [did]
+        }
+
+        connection.query(mySqlQuery)
+            .then((data) => {
+                resolve(data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+var addDepartment = function (did, dname, lid, budget) {
+    return new Promise((resolve, reject) => {
+        var mySqlQuery = {
+            sql: 'INSERT INTO dept (did, dname, lid, budget) values (?,?,?,?)',
+            values: [did, dname, lid, budget]
+        }
+
+        connection.query(mySqlQuery)
+            .then((data) => {
+                resolve(data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
 
 
 
 
-module.exports = { getEmployees, updateEmployee, getUpdate, getDepartments }
+module.exports = { getEmployees, updateEmployee, getUpdate, getDepartments, deleteDepartment, addDepartment }

@@ -18,10 +18,7 @@ app.get('/', (req, res) => {
     console.log("Get Request on /")
     res.render('about');
 })
-app.get('/deleteDept', (req, res) => {
-    console.log("Get Request Recieved to delete depts info")
-    res.render('deletedept')
-})
+
 
 app.get('/employees', (req, res) => {
     mysql.getEmployees()
@@ -34,54 +31,85 @@ app.get('/employees', (req, res) => {
         })
 })
 
+
 app.get('/edit/:eid', (req, res) => {
     mysql.getUpdate(req.params.eid)
         .then((data) => {
             console.log(data)
-            res.render('edit', { edit: data[0] })
+            res.render('edit', { edit: data })
         })
         .catch((error) => {
             console.log(error)
-            if (error.errno == 1146) {
-                res.send("Invalid table: " + error.sqlMessage)
-            }
-            else {
-                res.send(error)
-            }
-
+            res.send(error)
         })
-
 })
 
 app.post("/edit/:eid", (req, res) => {
 
-    mysql.updateEmployee(req.body)
+    mysql.updateEmployee(req.body.eid, req.body.ename, req.body.role, req.body.salary)
         .then((data) => {
+            res.redirect("/employees")
             console.log(data + "Okay")
 
 
         }).catch((error) => {
-            console.log("Not Okay" + error)
+            console.log(error)
 
         })
-    res.redirect('/employees')
 
 })
 
-app.get('/dept', (req, res) => {
-    mysql.getDept()
+app.get('/depts', (req, res) => {
+    mysql.getDepartments()
         .then((data) => {
-            //res.send(data)
             res.render('depts', { depts: data })
         })
         .catch((error) => {
-            if (error.errno == 1146) {
-                res.send("Invalid table: " + error.sqlMessage)
-            }
-            else (
-                res.send(error)
-            )
-
+            res.send(error)
         })
 })
+app.get('/depts/delete/:did', (req, res) => {
 
+    mysql.deleteDepartment(req.params.did)
+        .then((data) => {
+            if (data.affectedRows == 0) {
+                res.send("<h1>Error Message</h1><h2>" + req.params.did + " cannot be deleted.</h2><hr>" + "<a href='/'>Home</a>")
+            } else {
+                res.send("<h2> " + req.params.did + " Deleted.</h2>" + "<a href='/'>Home</a>")
+            }
+        })
+        .catch((error) => {
+            if (error.code == "ER_ROW_IS_REFERENCED_2") {
+                res.send("<h2>Error Message: " + req.params.did + " has employee  and connot be deleted</h2><hr>" + "<a href='/'>Home</a>")
+            }
+            console.log(error)
+        })
+})
+app.get('/depts/add', (req, res) => {
+    res.render("addDepts")
+})
+//post request
+app.post('/depts/add', (req, res) => {
+    mysql.checkLocationID(req.body.lid).then((data) => {
+        if (data[0] != null) {
+            mysql.addDepartment(req.body.did, req.body.name, req.body.lid, req.body.budget)
+                .then((data) => {
+                    res.redirect("/department")
+                })
+                .catch((error) => {
+                    console.log(error)
+                    if (error.message.includes("11000")) {
+                        res.send("<h1>_ID: " + req.body.did + " already exists</h1>" + "<a href='/'>Home</a>")
+                    } else {
+                        res.send(error.message)
+                    }
+                })
+        } else {
+            res.send("<h1>Location: " + req.body.lid + " doesn't in mySQL</h1>" + "<a href='/'>Home</a>")
+        }
+
+    })
+        .catch((error) => {
+            console.log(error)
+        })
+})
