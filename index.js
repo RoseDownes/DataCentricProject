@@ -2,7 +2,7 @@
 var express = require('express')
 var app = express();
 var ejs = require("ejs");
-//var mongoDAO = require("./mongoDAO");
+var mongodbDAO = require('./mongodbDAO');
 var mysql = require('./mySqlDAO')
 
 var bodyParser = require('body-parser')
@@ -105,7 +105,7 @@ app.post('/depts/add', (req, res) => {
                     }
                 })
         } else {
-            res.send("<h1>Location: " + req.body.lid + " doesn't in mySQL</h1>" + "<a href='/'>Home</a>")
+            res.send("<h1>" + req.body.lid + " doesn't exist in mySQL </h1>" + "<a href='/'>Home</a>")
         }
 
     })
@@ -113,3 +113,66 @@ app.post('/depts/add', (req, res) => {
             console.log(error)
         })
 })
+
+
+app.get('/employeesMongodb', (req, res) => {
+    mongodbDAO.findAll()
+        .then((data) => {
+            console.log("Looking for data>>>>");
+            res.render('employeesMongodb', { employeesMongodb: data })
+        })
+        .catch((error) => {
+            console.log("NOT Working..");
+            console.log(error);
+            res.send(error)
+        })
+})
+app.get('/employeesMongoDB/add', (req, res) => {
+    res.render("addEmployees")
+})
+app.post('/employeesMongodb/add', (req, res) => {
+    mysql.getUpdate(req.body._id).then((data) => {
+        if (data[0] != null) {
+            mongodbDAO.addEmployees(req.body._id, req.body.phone, req.body.email)
+                .then((data) => {
+                    res.redirect("/employeesMongodb")
+                })
+                .catch((error) => {
+                    if (error.message.includes("11000")) {
+                        res.send("<h1>_ID: " + req.body._id + " already exists</h1>" + "<a href='/'>Home</a>")
+                    } else {
+                        res.send(error.message)
+                    }
+                })
+            //That ID does not exist
+        } else {
+            res.send("<h1>Employee: " + req.body._id + " doesn't in mySQL</h1>" + "<a href='/'>Home</a>")
+        }
+    })
+        .catch((error) => {
+            console.log(error)
+        })
+})
+// app.post('/employeesMongodb/add', (req, res) => {
+//     mysql.getUpdate(req.body._id)
+//         .then((e) => {
+//             if (e.length == 0) {
+//                 res.send("Unable to add");
+//             }
+//             else {
+//                 console.log(req.body)
+
+//                 mongodbDAO.addEmployees(req.body)
+//                     .then((d) => {
+//                         res.redirect('/')
+//                     }).catch((error) => {
+//                         console.log(error)
+//                         res.render('error')
+//                     })
+//             }
+//         }).catch((error) => {
+//             console.log(error)
+//         })
+// })
+
+

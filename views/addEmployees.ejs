@@ -1,0 +1,20 @@
+<h1>Add Employee</h1>
+
+<!--Form has all input validation-->
+<form action="/employeesMongodb/add" method="POST">
+    <label>Employee ID:</label>
+    <input type="text" name="_id" minlength="4" maxlength="4" required><br>
+    <label>Phone Number:</label>
+    <input type="number" name="phone" min="9999" required><br>
+    <label>Email:</label>
+    <input type="email" name="email" required><br><br>
+    <input type="submit" value="Submit">
+</form>
+
+<p></p>
+
+<p></p>
+
+<h3><a href="http://localhost:3004/employeesMongodb">Back</a></h3>
+<hr>
+<h2><a href="http://localhost:3004/">Home</a></h2>
