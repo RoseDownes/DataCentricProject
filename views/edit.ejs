@@ -1,21 +1,26 @@
 <h1> edit employee</h1>
 
-
+<!--
+• EID is not editable.
+• Name should be a minimum of 5 characters.
+• Role should be Manager or Employee.
+• Salary should be > 0.
+-->
 <form method="POST">
     <label>EID</label>
-    <input type="text" name="eid" required value="<%=edit.eid %>" readonly>
+    <input type="text" name="eid" required readonly value="<%=edit[0].eid %>">
     <br />
 
     <label>Name</label>
-    <input type="text" name="ename" required value="<%=edit.ename %>" minlength="5">
+    <input type="text" name="ename" required value="<%=edit[0].ename %>" minlength="5">
     <br />
 
     <label>Role</label>
-    <input type="city" name="role" required value="<%=edit.role %>">
+    <input type="city" name="role" required value="<%=edit[0].role %>">
     <br />
 
     <label>Salary</label>
-    <input type="text" name="salary" min="1" max="10000" required value="<%=edit.salary %>">
+    <input type="text" name="salary" min="1" max="10000" required value="<%=edit[0].salary %>">
     <br />
 
     <button type="submit">Submit</button>

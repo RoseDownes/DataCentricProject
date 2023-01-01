@@ -43,15 +43,17 @@ var getUpdate = function (eid) {
 var updateEmployee = function (employee) {
     return new Promise((resolve, reject) => {
         var myQuery = {
-            sql: `Update employee set ename =?, role =?, salary = ? where eid like "${employee.eid}";`,
-            values: [employee.ename, employee.role, employee.salary]
+            sql: `UPDATE employee set ename =?, role =?, salary = ? where eid =?;`,
+            values: [employee.ename, employee.role, employee.salary, employee.eid]
         }
 
         connection.query(myQuery)
             .then((data) => {
+                resolve(data)
                 console.log(data)
             })
             .catch(error => {
+                reject(error)
                 console.log(error)
             })
     })
@@ -87,24 +89,8 @@ var deleteDepartment = function (did) {
     })
 }
 
-var addDepartment = function (did, dname, lid, budget) {
-    return new Promise((resolve, reject) => {
-        var mySqlQuery = {
-            sql: 'INSERT INTO dept (did, dname, lid, budget) values (?,?,?,?)',
-            values: [did, dname, lid, budget]
-        }
-
-        connection.query(mySqlQuery)
-            .then((data) => {
-                resolve(data)
-            })
-            .catch((error) => {
-                reject(error)
-            })
-    })
-}
 
 
 
 
-module.exports = { getEmployees, updateEmployee, getUpdate, getDepartments, deleteDepartment, addDepartment }
+module.exports = { getEmployees, updateEmployee, getUpdate, getDepartments, deleteDepartment }
