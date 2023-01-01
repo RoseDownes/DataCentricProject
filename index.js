@@ -1,4 +1,3 @@
-//const e = require('express');
 var express = require('express')
 var app = express();
 var ejs = require("ejs");
@@ -100,29 +99,7 @@ app.get('/employeesMongodb', (req, res) => {
 app.get('/employeesMongoDB/add', (req, res) => {
     res.render("addEmployees")
 })
-// app.post('/employeesMongodb/add', (req, res) => {
-//     mysql.getUpdate(req.body._id).then((data) => {
-//         if (data[0] != null) {
-//             mongodbDAO.addEmployees(req.body._id, req.body.phone, req.body.email)
-//                 .then((data) => {
-//                     res.redirect("/employeesMongodb")
-//                 })
-//                 .catch((error) => {
-//                     if (error.message.includes("11000")) {
-//                        res.send("<h1>_ID: " + req.body._id + " already exists</h1>" + "<a href='/'>Home</a>")
-//                     } else {
-//                         res.send(error.message)
-//                     }
-//                 })
-//             //That ID does not exist
-//         } else {
-//             res.send("<h1>Employee: " + req.body._id + " doesn't in mySQL</h1>" + "<a href='/'>Home</a>")
-//         }
-//     })
-//         .catch((error) => {
-//             console.log(error)
-//         })
-// })
+
 app.post('/employeesMongodb/add', (req, res) => {
     mysql.getUpdate(req.body._id)
         .then((e) => {
